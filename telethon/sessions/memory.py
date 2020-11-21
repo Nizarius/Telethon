@@ -145,28 +145,28 @@ class MemorySession(Session):
     async def process_entities(self, tlo):
         self._entities |= set(self._entities_to_rows(tlo))
 
-    def get_entity_rows_by_phone(self, phone):
+    async def get_entity_rows_by_phone(self, phone):
         try:
             return next((id, hash) for id, hash, _, found_phone, _
                         in self._entities if found_phone == phone)
         except StopIteration:
             pass
 
-    def get_entity_rows_by_username(self, username):
+    async def get_entity_rows_by_username(self, username):
         try:
             return next((id, hash) for id, hash, found_username, _, _
                         in self._entities if found_username == username)
         except StopIteration:
             pass
 
-    def get_entity_rows_by_name(self, name):
+    async def get_entity_rows_by_name(self, name):
         try:
             return next((id, hash) for id, hash, _, _, found_name
                         in self._entities if found_name == name)
         except StopIteration:
             pass
 
-    def get_entity_rows_by_id(self, id, exact=True):
+    async def get_entity_rows_by_id(self, id, exact=True):
         try:
             if exact:
                 return next((id, hash) for found_id, hash, _, _, _
@@ -202,21 +202,21 @@ class MemorySession(Session):
         if isinstance(key, str):
             phone = utils.parse_phone(key)
             if phone:
-                result = self.get_entity_rows_by_phone(phone)
+                result = await self.get_entity_rows_by_phone(phone)
             else:
                 username, invite = utils.parse_username(key)
                 if username and not invite:
-                    result = self.get_entity_rows_by_username(username)
+                    result = await self.get_entity_rows_by_username(username)
                 else:
                     tup = utils.resolve_invite_link(key)[1]
                     if tup:
-                        result = self.get_entity_rows_by_id(tup, exact=False)
+                        result = await self.get_entity_rows_by_id(tup, exact=False)
 
         elif isinstance(key, int):
-            result = self.get_entity_rows_by_id(key, exact)
+            result = await self.get_entity_rows_by_id(key, exact)
 
         if not result and isinstance(key, str):
-            result = self.get_entity_rows_by_name(key)
+            result = await self.get_entity_rows_by_name(key)
 
         if result:
             entity_id, entity_hash = result  # unpack resulting tuple
