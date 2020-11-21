@@ -239,7 +239,7 @@ class UpdateMethods:
                         state = d.intermediate_state
 
                     pts, date = state.pts, state.date
-                    self._handle_update(types.Updates(
+                    await self._handle_update(types.Updates(
                         users=d.users,
                         chats=d.chats,
                         date=state.date,
@@ -284,8 +284,8 @@ class UpdateMethods:
     # It is important to not make _handle_update async because we rely on
     # the order that the updates arrive in to update the pts and date to
     # be always-increasing. There is also no need to make this async.
-    def _handle_update(self: 'TelegramClient', update):
-        self.session.process_entities(update)
+    async def _handle_update(self: 'TelegramClient', update):
+        await self.session.process_entities(update)
         self._entity_cache.add(update)
 
         if isinstance(update, (types.Updates, types.UpdatesCombined)):

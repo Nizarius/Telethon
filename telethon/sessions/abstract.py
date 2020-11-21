@@ -128,7 +128,7 @@ class Session(ABC):
         return []
 
     @abstractmethod
-    def process_entities(self, tlo):
+    async def process_entities(self, tlo):
         """
         Processes the input ``TLObject`` or ``list`` and saves
         whatever information is relevant (e.g., ID or access hash).
@@ -136,7 +136,7 @@ class Session(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_input_entity(self, key):
+    async def get_input_entity(self, key):
         """
         Turns the given key into an ``InputPeer`` (e.g. ``InputPeerUser``).
         The library uses this method whenever an ``InputPeer`` is needed

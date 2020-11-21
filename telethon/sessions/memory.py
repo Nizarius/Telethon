@@ -142,7 +142,7 @@ class MemorySession(Session):
                 rows.append(row)
         return rows
 
-    def process_entities(self, tlo):
+    async def process_entities(self, tlo):
         self._entities |= set(self._entities_to_rows(tlo))
 
     def get_entity_rows_by_phone(self, phone):
@@ -182,7 +182,7 @@ class MemorySession(Session):
         except StopIteration:
             pass
 
-    def get_input_entity(self, key):
+    async def get_input_entity(self, key):
         try:
             if key.SUBCLASS_OF_ID in (0xc91c90b6, 0xe669bf46, 0x40f202fd):
                 # hex(crc32(b'InputPeer', b'InputUser' and b'InputChannel'))
