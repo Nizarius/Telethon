@@ -408,13 +408,14 @@ class UserMethods:
         except TypeError:
             pass
 
+        # Telestat note: disable as we don't need any cache
         # Next in priority is having a peer (or its ID) cached in-memory
-        try:
-            # 0x2d45687 == crc32(b'Peer')
-            if isinstance(peer, int) or peer.SUBCLASS_OF_ID == 0x2d45687:
-                return self._entity_cache[peer]
-        except (AttributeError, KeyError):
-            pass
+        # try:
+        #     # 0x2d45687 == crc32(b'Peer')
+        #     if isinstance(peer, int) or peer.SUBCLASS_OF_ID == 0x2d45687:
+        #         return self._entity_cache[peer]
+        # except (AttributeError, KeyError):
+        #     pass
 
         # Then come known strings that take precedence
         if peer in ('me', 'self'):
